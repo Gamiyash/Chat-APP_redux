@@ -13,14 +13,24 @@ const Chat = () => {
   const [error, setError] = useState('');
   const chatWindowRef = useRef(null);
 
-  useEffect(() => {
-    // Simulate receiving a message from the bot after a delay
-    const timer = setTimeout(() => {
-      dispatch(receiveMessage({ text: 'Hello, I am your assistant!', user: 'Bot', received: true }));
-    }, 5000);
+  // useEffect(() => {
+  //   // Simulate receiving a message from the bot after a delay
+  //   const timer = setTimeout(() => {
+  //     dispatch(receiveMessage({ text: 'Hello, I am your assistant!', user: 'Bot', received: true }));
+  //   }, 5000);
 
-    return () => clearTimeout(timer);
-  }, [dispatch]);
+  //   return () => clearTimeout(timer);
+  // }, [dispatch]);
+  useEffect(() => {
+    // Setup interval to simulate bot responses every 5 seconds
+    const interval = setInterval(() => {
+      if (messages.length > 0 && !messages[messages.length - 1].received) { // Only respond if user has sent a message
+        dispatch(receiveMessage({ text: 'Hello, I am your assistant!', user: 'Bot', received: true }));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup the interval on component unmount
+  }, [dispatch, messages]);
 
   useEffect(() => {
     // Auto-scroll to the latest message
